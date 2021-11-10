@@ -14,9 +14,9 @@ const send_response = (data) => {
 };
 
 
-const get_all_data = async() => {
+const get_all_data = async () => {
     try {
-        var data = await dynamoDB.scan({ TableName: "Mondal_BookTable" }).promise();
+        var data = await dynamoDB.scan({ TableName: "table_name" }).promise();
         if (data.Items) {
             return send_response(data.Items);
         }
@@ -27,10 +27,10 @@ const get_all_data = async() => {
 
 };
 
-const one_data = async(id) => {
+const one_data = async (id) => {
     try {
         var get_one_user = await dynamoDB.get({
-            TableName: "Mondal_BookTable",
+            TableName: "table_name",
             Key: {
                 book_id: id,
             },
@@ -45,12 +45,24 @@ const one_data = async(id) => {
 };
 
 
-const create_user = async(items) => {
+const create_book = async (items) => {
     const newUser = await dynamoDB.put({
         Item: {
             ...items
         },
-        TableName: "Mondal_BookTable",
+        TableName: "table_name",
+    }).promise();
+    if (newUser) {
+        return send_response({ message: 'Updated' });
+    };
+};
+
+const delete_book = async (id) => {
+    const newUser = await dynamoDB.delete({
+        Item: {
+            book_id: id
+        },
+        TableName: "table_name",
     }).promise();
     if (newUser) {
         return send_response({ message: 'Updated' });
@@ -58,7 +70,7 @@ const create_user = async(items) => {
 };
 
 
-exports.handler = async(event) => {
+exports.handler = async (event) => {
     if (event.resource && event.resource === '/one_user') {
         const { book_id } = event.queryStringParameters || {};
         return one_data(book_id);
@@ -66,6 +78,10 @@ exports.handler = async(event) => {
     else if (event.resource && event.resource === '/create_user') {
         const getBodyData = JSON.parse(event.body);
         return create_user(getBodyData);
+    }
+    else if (event.resource && event.resource === '/delete_user') {
+        const { book_id } = event.queryStringParameters || {};
+        return delete_book(book_id);
     }
     else return get_all_data();
 
