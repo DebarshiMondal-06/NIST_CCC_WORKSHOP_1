@@ -1,4 +1,4 @@
-const api_url = "https://9sgmjm6qra.execute-api.ap-south-1.amazonaws.com/dev";
+const api_url = "";
 
 async function getapi(url) {
   const response = await fetch(url);
