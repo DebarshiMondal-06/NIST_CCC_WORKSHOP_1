@@ -77,7 +77,7 @@ exports.handler = async (event) => {
     }
     else if (event.resource && event.resource === '/create_user') {
         const getBodyData = JSON.parse(event.body);
-        return create_user(getBodyData);
+        return create_book(getBodyData);
     }
     else if (event.resource && event.resource === '/delete_user') {
         const { book_id } = event.queryStringParameters || {};
